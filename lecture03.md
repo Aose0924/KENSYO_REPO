@@ -20,7 +20,7 @@
 ![1-0401_3](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/a74d9e61-7d07-4f41-8b76-accc6a09b809)
 ### APサーバ終了
 ![1-0401_4](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/bca53b11-8b4e-4146-8aef-e6a5aeaac66b)
-### APサーバへのアクセス確認
+### APサーバへ引き続きアクセスできるか確認
 ![1-0401_5](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/e6d69022-9a43-46e0-a4bb-478dd99824f4)
   
 ## 課題2 DBサーバについて
