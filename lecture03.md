@@ -33,6 +33,7 @@
 #### DBサーバを終了させて引き続きアクセス
 ![2-0402_5](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/7ee6e32f-8af2-41b7-9407-83924bd67f89)
 #### DBサーバを起動させてアクセス確認
+![2-0402_6](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/86fac261-bd30-475a-81cf-acf0ed2ad4c1)
 ![2-0402_7](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/91bd3f58-9532-4e7a-afe9-13bd8998ff59)
   
 ### Railsの構成管理ツール名の確認
