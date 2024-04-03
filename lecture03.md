@@ -37,4 +37,5 @@
 ![2-0402_7](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/91bd3f58-9532-4e7a-afe9-13bd8998ff59)
   
 ### Railsの構成管理ツール名の確認
-![2-0401_3](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/79462181-bf8a-4572-96b3-53aa5fdfca40)
+bundler
+![3-0403_1](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/f3eb524c-1e9d-46e5-9495-983a83533835)
