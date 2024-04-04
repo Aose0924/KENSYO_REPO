@@ -28,9 +28,8 @@
 ![2-0401_1](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/076b4321-2c37-499a-840b-afd7425f2d7e)
 ![2-0401_2](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/94c5a4b6-85c3-4fd8-9ca4-319c754b9cda)
 ### DBサーバを終了させて引き続きアクセスできるか
-#### DBサーバ状態確認
-![3-0402_1](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/1b76d643-e01d-4b33-9d95-9c3b42e1d7e6)
 #### DBサーバを終了させて引き続きAPサーバにアクセス
+![3-0402_1](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/1b76d643-e01d-4b33-9d95-9c3b42e1d7e6)
 ![3-0402_2](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/7c8a71fa-50ea-423d-93f1-2da637b33452)
 #### DBサーバを終了させて引き続きDBサーバにアクセス
 ![2-0402_5](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/14e91f23-119f-4411-8504-254e68ecdda5)
