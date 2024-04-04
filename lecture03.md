@@ -29,13 +29,12 @@
 ![2-0401_2](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/94c5a4b6-85c3-4fd8-9ca4-319c754b9cda)
 ### DBサーバを終了させて引き続きアクセスできるか
 #### DBサーバ状態確認
-![2-0402_4](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/c92f65a5-a106-4e51-a986-ec8fb4db2082)
-#### DBサーバを終了させて引き続きアクセス
-![2-0402_5](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/7ee6e32f-8af2-41b7-9407-83924bd67f89)
-#### DBサーバを起動させてアクセス確認
-![2-0402_6](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/86fac261-bd30-475a-81cf-acf0ed2ad4c1)
-![2-0402_7](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/91bd3f58-9532-4e7a-afe9-13bd8998ff59)
-  
+![3-0402_1](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/1b76d643-e01d-4b33-9d95-9c3b42e1d7e6)
+#### DBサーバを終了させて引き続きAPサーバにアクセス
+![3-0402_2](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/7c8a71fa-50ea-423d-93f1-2da637b33452)
+#### DBサーバを終了させて引き続きDBサーバにアクセス
+![2-0402_5](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/14e91f23-119f-4411-8504-254e68ecdda5)
+
 ### Railsの構成管理ツール名の確認
 bundler
 ![3-0403_1](https://github.com/tatsuyaaose/KENSYO_REPO/assets/25246044/f3eb524c-1e9d-46e5-9495-983a83533835)
