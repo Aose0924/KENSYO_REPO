@@ -42,41 +42,41 @@
 
 ## RDS接続
 ### 正常に接続できることを確認
-ubuntu@ip-172-31-8-113:~$ su - oracle
-Password:
-$
-$ export ORACLE_HOME=/u01/app/instantclient_19_19
-$ export LD_LIBRARY_PATH="$ORACLE_HOME"
-$ export PATH="$ORACLE_HOME:$PATH"
-$ cat /u01/app/instantclient_19_19/network/admin/tnsnames.ora
-KENSYO =
-  (DESCRIPTION =
-    (ADDRESS = (PROTOCOL = TCP)(HOST = raisetech.cjcyo6gekjgm.ap-northeast-1.rds.amazonaws.com)(PORT = 1521))
-    (CONNECT_DATA =
-      (SERVER = DEDICATED)
-      (SID = DATABASE)
-    )
-  )
-$ sqlplus admin@KENSYO
-
-SQL*Plus: Release 19.0.0.0.0 - Production on Fri Apr 12 01:50:41 2024
-Version 19.19.0.0.0
-
-Copyright (c) 1982, 2022, Oracle.  All rights reserved.
-
-Enter password:
-Last Successful login time: Fri Apr 12 2024 01:45:07 +00:00
-
-Connected to:
-Oracle Database 19c Standard Edition 2 Release 19.0.0.0.0 - Production
-Version 19.22.0.0.0
-
-SQL>
-SQL>
-SQL>
-SQL> show user
-USER is "ADMIN"
-SQL> quit
-Disconnected from Oracle Database 19c Standard Edition 2 Release 19.0.0.0.0 - Production
-Version 19.22.0.0.0
-$
+ubuntu@ip-172-31-8-113:~$ su - oracle  
+Password:  
+$  
+$ export ORACLE_HOME=/u01/app/instantclient_19_19  
+$ export LD_LIBRARY_PATH="$ORACLE_HOME"  
+$ export PATH="$ORACLE_HOME:$PATH"  
+$ cat /u01/app/instantclient_19_19/network/admin/tnsnames.ora  
+KENSYO =  
+  (DESCRIPTION =  
+    (ADDRESS = (PROTOCOL = TCP)(HOST = raisetech.cjcyo6gekjgm.ap-northeast-1.rds.amazonaws.com)(PORT = 1521))  
+    (CONNECT_DATA =  
+      (SERVER = DEDICATED)  
+      (SID = DATABASE)  
+    )  
+  )  
+$ sqlplus admin@KENSYO  
+  
+SQL*Plus: Release 19.0.0.0.0 - Production on Fri Apr 12 01:50:41 2024  
+Version 19.19.0.0.0  
+  
+Copyright (c) 1982, 2022, Oracle.  All rights reserved.  
+  
+Enter password:  
+Last Successful login time: Fri Apr 12 2024 01:45:07 +00:00  
+  
+Connected to:  
+Oracle Database 19c Standard Edition 2 Release 19.0.0.0.0 - Production  
+Version 19.22.0.0.0  
+  
+SQL>  
+SQL>  
+SQL>  
+SQL> show user  
+USER is "ADMIN"  
+SQL> quit  
+Disconnected from Oracle Database 19c Standard Edition 2 Release 19.0.0.0.0 - Production  
+Version 19.22.0.0.0  
+$  
