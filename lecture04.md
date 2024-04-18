@@ -49,13 +49,11 @@
 
 
 ## 自端末以外からのSSH接続を制御
-![EC2_SSH制御_0414-1](/EC2_SSH制御_0414-1.PNG)
+![EC2_SSH制御_0418-1](/EC2_SSH制御_0418-1.PNG)
 ### EC2インスタンスのセキュリティグループ内容確認
-![EC2_SSH制御_0414-2](/EC2_SSH制御_0414-2.PNG)
-![EC2_SSH制御_0414-3](/EC2_SSH制御_0414-3.PNG)
-![EC2_SSH制御_0414-4](/EC2_SSH制御_0414-4.PNG)
-![EC2_SSH制御_0414-5](/EC2_SSH制御_0414-5.PNG)
-![EC2_SSH制御_0414-6](/EC2_SSH制御_0414-6.PNG)
+![EC2_SSH制御_0418-2](/EC2_SSH制御_0418-2.PNG)
+![EC2_SSH制御_0418-3](/EC2_SSH制御_0418-3.PNG)
+![EC2_SSH制御_0418-4](/EC2_SSH制御_0418-4.PNG)
 
 
 ## SSH接続
@@ -67,28 +65,28 @@
 
 ## RDS接続
 ### 正常に接続できることを確認
-ubuntu@ip-10-0-30-1:~$ su - oracle
-Password:
-$ export ORACLE_HOME=/u01/app/instantclient_19_19
-$ export LD_LIBRARY_PATH="$ORACLE_HOME"
-$ export PATH="$ORACLE_HOME:$PATH"
-$ sqlplus admin@KENSYO
-
-SQL*Plus: Release 19.0.0.0.0 - Production on Thu Apr 18 14:19:48 2024
-Version 19.19.0.0.0
-
-Copyright (c) 1982, 2022, Oracle.  All rights reserved.
-
-Enter password:
-Last Successful login time: Thu Apr 18 2024 10:59:00 +00:00
-
-Connected to:
-Oracle Database 19c Standard Edition 2 Release 19.0.0.0.0 - Production
-Version 19.22.0.0.0
-
-SQL> show user
-USER is "ADMIN"
-SQL> quit
-Disconnected from Oracle Database 19c Standard Edition 2 Release 19.0.0.0.0 - Production
-Version 19.22.0.0.0
-$
+ubuntu@ip-10-0-30-1:~$ su - oracle  
+Password:  
+$ export ORACLE_HOME=/u01/app/instantclient_19_19  
+$ export LD_LIBRARY_PATH="$ORACLE_HOME"  
+$ export PATH="$ORACLE_HOME:$PATH"  
+$ sqlplus admin@KENSYO  
+  
+SQL*Plus: Release 19.0.0.0.0 - Production on Thu Apr 18 14:19:48 2024  
+Version 19.19.0.0.0  
+  
+Copyright (c) 1982, 2022, Oracle.  All rights reserved.  
+  
+Enter password:  
+Last Successful login time: Thu Apr 18 2024 10:59:00 +00:00  
+  
+Connected to:  
+Oracle Database 19c Standard Edition 2 Release 19.0.0.0.0 - Production  
+Version 19.22.0.0.0  
+  
+SQL> show user  
+USER is "ADMIN"  
+SQL> quit  
+Disconnected from Oracle Database 19c Standard Edition 2 Release 19.0.0.0.0 - Production  
+Version 19.22.0.0.0  
+$  
