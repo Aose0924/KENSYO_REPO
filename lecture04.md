@@ -50,27 +50,27 @@
 -------------------------  
 ## Session ManagerによるEC2インスタンス接続、RDS接続確認
 -------------------------  
-### IAMロール
-####『AmazonSSMManagedInstanceCore』付与されていることを確認
+### 設定
+#### IAMロール
+##### 『AmazonSSMManagedInstanceCore』付与されていることを確認
 ![EC2_ROLE_0424-1](/EC2_ROLE_0424-1.PNG)
-### セキュリティグループ
-#### インバウンドルール、アウトバウンドルールでhttpsの付与を確認
+#### セキュリティグループ
+##### インバウンドルールでHTTPSのポートが付与されていることを確認
 ![EC2_SECURITY_0424-1](/EC2_SECURITY_0424-1.PNG)
-![EC2_SECURITY_0424-2](/EC2_SECURITY_0424-2.PNG)
-### エンドポイント
-#### 以下①②を確認
-#### ①サービス（com.amazonaws.ap-northeast-1.ssm、com.amazonaws.ap-northeast-1.ec2messages、com.amazonaws.ap-northeast-1.ssmmessages）付与されていること
-#### ②VPCがraisetech-vpc (vpc-041b64c68c22b15c7)に設定されていること
+#### エンドポイント
+##### 以下①②を確認
+##### ①サービス（com.amazonaws.ap-northeast-1.ssm、com.amazonaws.ap-northeast-1.ec2messages、com.amazonaws.ap-northeast-1.ssmmessages）が付与されていること
+##### ②VPCがraisetech-vpc (vpc-041b64c68c22b15c7)に設定されていること
 ![EC2_ENDPOINT_0424-1](/EC2_ENDPOINT_0424-1.PNG)
 ![EC2_ENDPOINT_0424-2](/EC2_ENDPOINT_0424-2.PNG)
 ![EC2_ENDPOINT_0424-3](/EC2_ENDPOINT_0424-3.PNG)
-![EC2_ENDPOINT_0424-4](/EC2_ENDPOINT_0424-4.PNG)
-### EC2インスタンス
-#### IAMロール、セキュリティグループのアタッチ済みを確認
+#### EC2インスタンス
+##### IAMロール、セキュリティグループのアタッチ済みを確認
 ![EC2_SECURITY_0424-1](/EC2_SECURITY_0424-1.PNG)
 ![EC2_SECURITY_0424-2](/EC2_SECURITY_0424-2.PNG)
-#### Session Managerによる接続
-##### RDSの接続確認
+
+### 接続確認
+#### Session ManagerによるRDSの接続確認
 ![EC2_CONN_0424-1](/EC2_CONN_0424-1.PNG)
 ![EC2_CONN_0424-2](/EC2_CONN_0424-2.PNG)
 ![EC2_CONN_0424-3](/EC2_CONN_0424-3.PNG)
