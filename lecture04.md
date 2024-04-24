@@ -66,8 +66,8 @@
 ![EC2_ENDPOINT_0424-3](/EC2_ENDPOINT_0424-3.PNG)
 #### EC2インスタンス
 ##### IAMロール、セキュリティグループのアタッチ済みを確認
-![EC2_SECURITY_0424-1](/EC2_SECURITY_0424-1.PNG)
-
+![EC2_TO_SESS_0424-1](/EC2_TO_SESS_0424-1.PNG)
+![EC2_TO_SESS_0424-2](/EC2_TO_SESS_0424-2.PNG)
 ### 接続確認
 #### Session ManagerによるRDSの接続確認
 ![EC2_CONN_0424-1](/EC2_CONN_0424-1.PNG)
