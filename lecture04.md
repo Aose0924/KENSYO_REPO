@@ -48,46 +48,31 @@
 ![RDS_0421-1-2](/RDS_0421-1-2.PNG)
 
 -------------------------  
-## 自端末以外からのSSH接続を制御
+## Session ManagerによるEC2インスタンス接続、RDS接続確認
 -------------------------  
-![EC2_SSH制御_0418-1](/EC2_SSH制御_0418-1.PNG)
-### EC2インスタンスのセキュリティグループ内容確認
-![EC2_SSH制御_0418-2](/EC2_SSH制御_0418-2.PNG)
-![EC2_SSH制御_0418-3](/EC2_SSH制御_0418-3.PNG)
-![EC2_SSH制御_0418-4](/EC2_SSH制御_0418-4.PNG)
--------------------------  
-## SSH接続
--------------------------  
-![EC-RDS_0418-1](/EC-RDS_0418-1.PNG)
-![EC-RDS_0418-2](/EC-RDS_0418-2.PNG)
-![EC-RDS_0418-3](/EC-RDS_0418-3.PNG)
-![EC-RDS_0418-4](/EC-RDS_0418-4.PNG)
--------------------------  
-## RDS接続
--------------------------  
-### 正常に接続できることを確認
-ubuntu@ip-10-0-30-1:~$ su - oracle  
-Password:  
-$ export ORACLE_HOME=/u01/app/instantclient_19_19  
-$ export LD_LIBRARY_PATH="$ORACLE_HOME"  
-$ export PATH="$ORACLE_HOME:$PATH"  
-$ sqlplus admin@KENSYO  
-  
-SQL*Plus: Release 19.0.0.0.0 - Production on Thu Apr 18 14:19:48 2024  
-Version 19.19.0.0.0  
-  
-Copyright (c) 1982, 2022, Oracle.  All rights reserved.  
-  
-Enter password:  
-Last Successful login time: Thu Apr 18 2024 10:59:00 +00:00  
-  
-Connected to:  
-Oracle Database 19c Standard Edition 2 Release 19.0.0.0.0 - Production  
-Version 19.22.0.0.0  
-  
-SQL> show user  
-USER is "ADMIN"  
-SQL> quit  
-Disconnected from Oracle Database 19c Standard Edition 2 Release 19.0.0.0.0 - Production  
-Version 19.22.0.0.0  
-$  
+### IAMロール
+####『AmazonSSMManagedInstanceCore』付与されていることを確認
+![EC2_ROLE_0424-1](/EC2_ROLE_0424-1.PNG)
+### セキュリティグループ
+#### インバウンドルール、アウトバウンドルールでhttpsの付与を確認
+![EC2_SECURITY_0424-1](/EC2_SECURITY_0424-1.PNG)
+![EC2_SECURITY_0424-2](/EC2_SECURITY_0424-2.PNG)
+### エンドポイント
+#### 以下①②を確認
+#### ①サービス（com.amazonaws.ap-northeast-1.ssm、com.amazonaws.ap-northeast-1.ec2messages、com.amazonaws.ap-northeast-1.ssmmessages）付与されていること
+#### ②VPCがraisetech-vpc (vpc-041b64c68c22b15c7)に設定されていること
+![EC2_ENDPOINT_0424-1](/EC2_ENDPOINT_0424-1.PNG)
+![EC2_ENDPOINT_0424-2](/EC2_ENDPOINT_0424-2.PNG)
+![EC2_ENDPOINT_0424-3](/EC2_ENDPOINT_0424-3.PNG)
+![EC2_ENDPOINT_0424-4](/EC2_ENDPOINT_0424-4.PNG)
+### EC2インスタンス
+#### IAMロール、セキュリティグループのアタッチ済みを確認
+![EC2_SECURITY_0424-1](/EC2_SECURITY_0424-1.PNG)
+![EC2_SECURITY_0424-2](/EC2_SECURITY_0424-2.PNG)
+#### Session Managerによる接続
+##### RDSの接続確認
+![EC2_CONN_0424-1](/EC2_CONN_0424-1.PNG)
+![EC2_CONN_0424-2](/EC2_CONN_0424-2.PNG)
+![EC2_CONN_0424-3](/EC2_CONN_0424-3.PNG)
+![EC2_CONN_0424-4](/EC2_CONN_0424-4.PNG)
+![EC2_CONN_0424-5](/EC2_CONN_0424-5.PNG)
