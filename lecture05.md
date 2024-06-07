@@ -320,4 +320,70 @@ Exiting
 [ec2-user@ip-10-0-2-71 tmp]$  
 [ec2-user@ip-10-0-2-71 tmp]$ cat ../../tmp/raitech5.txt  
 >  TEST[ec2-user@ip-10-0-2-71 tmp]$  
-[ec2-user@ip-10-0-2-71 tmp]$  
+[ec2-user@ip-10-0-2-71 tmp]$
+  
+  
+### ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+### ↓↓ エビデンス追加分
+### ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+#### ALBを経由してアプリケーション（第3回課題で利用したもの）に接続
+##### /etc/nginx/conf.d/にrails-app.confを追加
+>  \# cat /etc/nginx/conf.d/rails-app.conf  
+>  upstream rails-app {  
+>      # UNIXドメインソケット通信の設定  
+>      server 127.0.0.1:3000;  
+>  }  
+>    
+>  server {  
+>      # 80番ポート(HTTP)を許可  
+>      listen 80;  
+>    
+>      # ホスト名  
+>      server_name localhost;  
+>    
+>      # 静的ファイル（画像など）のパスをドキュメントルートに設定  
+>      root /home/ec2-user/raisetech-live8-sample-app/public;  
+>    
+>      location / {  
+>        # ドキュメントルート配下を以下の順で検索  
+>        # URIのパスに対するファイル（静的コンテンツ）が存在すれば、そのファイル返 す。  
+>        # 存在しなければ、動的コンテンツとして@rails-appに内部リダイレクト。  
+>        try_files $uri @rails-app;  
+>      }  
+>    
+>      # nginxのリバースプロキシ設定  
+>      # 上記の@rails-appが呼び出された場合のみ以下の設定が読み込まれる  
+>      location @rails-app {  
+>          # サーバの指示通りにリダイレクト  
+>          proxy_redirect off;  
+>    
+>          # proxy_set_headerを利用することでサーバーに情報を転送できる  
+>          proxy_set_header Host $http_host; # ホスト名  
+>          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; # 送信元の 経路情報  
+>          proxy_set_header X-Real-IP $remote_addr; #送信元のIPアドレス  
+>    
+>          # upstreamの名前を記述  
+>          proxy_pass http://rails-app;  
+>      }  
+>  }  
+>  \#  
+##### nginx再起動  
+>  su -  
+>  systemctl restart nginx  
+##### Blocked hostエラー回避  
+>  su - ec2-user  
+>  vi /home/ec2-user/raisetech-live8-sample-app/config/environments  
+>  以下を追記  
+>  Rails.application.configure do  
+>    config.hosts << "raisetech5-lb-1842311282.ap-northeast-1.elb.amazonaws.com"  
+>  end  
+##### アプリケーション（第3回課題で利用したもの）を起動  
+>  cd  /home/ec2-user/raisetech-live8-sample-app  
+>  bin/dev  
+####  ALBを経由してアプリケーション（第3回課題で利用したもの）に接続確認  
+---------------    
+![ロードバランサ0608-1_2](/ロードバランサ0608-1_2.PNG)  
+---------------    
+![ロードバランサ0608-1_1](/ロードバランサ0608-1_1.PNG)  
+---------------    
+
