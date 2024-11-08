@@ -1,1 +1,39 @@
+[root@ip-10-0-0-56 conf.d]# systemctl start nginx
+[root@ip-10-0-0-56 conf.d]# systemctl status nginx
+● nginx.service - The nginx HTTP and reverse proxy server
+   Loaded: loaded (/usr/lib/systemd/system/nginx.service; disabled; vendor preset: disabled)
+   Active: active (running) since Wed 2024-11-06 15:01:39 UTC; 3s ago
+  Process: 19501 ExecStart=/usr/sbin/nginx (code=exited, status=0/SUCCESS)
+  Process: 19498 ExecStartPre=/usr/sbin/nginx -t (code=exited, status=0/SUCCESS)
+  Process: 19496 ExecStartPre=/usr/bin/rm -f /run/nginx.pid (code=exited, status=0/SUCCESS)
+ Main PID: 19503 (nginx)
+   CGroup: /system.slice/nginx.service
+           tq19503 nginx: master process /usr/sbin/nginx
+           tq19504 nginx: worker process
+           mq19505 nginx: worker process
 
+Nov 06 15:01:38 ip-10-0-0-56.ap-northeast-1.compute.internal systemd[1]: Star...
+Nov 06 15:01:38 ip-10-0-0-56.ap-northeast-1.compute.internal nginx[19498]: ng...
+Nov 06 15:01:38 ip-10-0-0-56.ap-northeast-1.compute.internal nginx[19498]: ng...
+Nov 06 15:01:39 ip-10-0-0-56.ap-northeast-1.compute.internal systemd[1]: Star...
+Hint: Some lines were ellipsized, use -l to show in full.
+[root@ip-10-0-0-56 conf.d]# cd
+[root@ip-10-0-0-56 ~]# mysql -u admin -p -h db-instance.cjcyo6gekjgm.ap-northeast-1.rds.amazonaws.com
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MySQL connection id is 50
+Server version: 8.0.35 Source distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MySQL [(none)]> quit
+Bye
+[root@ip-10-0-0-56 ~]#
+[root@ip-10-0-0-56 ~]# exit
+logout
+[ec2-user@ip-10-0-0-56 ~]$
+[ec2-user@ip-10-0-0-56 ~]$ aws s3 cp large_test_file.jpg s3://lecture10-s3-202410
+upload: ./large_test_file.jpg to s3://lecture10-s3-202410/large_test_file.jpg
+[ec2-user@ip-10-0-0-56 ~]$
