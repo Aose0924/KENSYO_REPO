@@ -1,21 +1,181 @@
 # 第10回課題  
-## 第5回課題で構築した環境をCloudFormationでコード化。実行し環境が作成されることを確認する。
+## 第5回課題で構築した環境をCloudFormationでコード化。実行することで環境が作成されることを確認する。
 -------------------------  
 ## 確認観点
- YAMLファイルに誤りがないこと 
- CloudFormationで作成した環境が問題なく動作していること 
- 第5回課題で作成した環境通りに作成されていること 
- 
+・YAMLファイルに誤りがないこと  
+・CloudFormationで作成した環境が問題なく動作していること  
+・第5回課題で作成した環境通りに作成されていること  
+   
 ### 第5回課題で作成した環境
 -------------------------  
 ![構成図](/lecture10/image/構成図.svg)
 -------------------------  
 
+  
+### 第10回課題で作成した環境
+  
 ### ①ネットワーク環境の構築
-#### YAMLファイル
-![lecture10-create_NW](/lecture10/lecture10-create_NW.yml)
+#### YAMLファイル   ( lecture10-create_NW.yml )
 -------------------------  
-#### ネットワーク環境構築前
+   
+AWSTemplateFormatVersion: 2010-09-09  
+Description: Network_Layer Template  
+  
+Resources:  
+  SampleVPC:  
+    Type: AWS::EC2::VPC  
+    Properties:  
+      CidrBlock: 10.0.0.0/16  
+      EnableDnsSupport: true  
+      EnableDnsHostnames: true  
+      InstanceTenancy: default  
+      Tags:  
+        - Key: name  
+          Value: SampleVPC  
+  
+  PublicSubnet1a:  
+    Type: AWS::EC2::Subnet  
+    Properties:  
+      VpcId: !Ref SampleVPC  
+      CidrBlock: 10.0.0.0/24  
+      MapPublicIpOnLaunch: true  
+      AvailabilityZone: ap-northeast-1a  
+      Tags:  
+      - Key: Name  
+        Value: PublicSubnet1a  
+  
+  PrivateSubnet1a:  
+    Type: AWS::EC2::Subnet  
+    Properties:  
+      VpcId: !Ref SampleVPC  
+      CidrBlock: 10.0.1.0/24  
+      AvailabilityZone: ap-northeast-1a  
+      Tags:  
+      - Key: Name  
+        Value: PrivateSubnet1a  
+  
+  PublicSubnet1c:  
+    Type: AWS::EC2::Subnet  
+    Properties:  
+      VpcId: !Ref SampleVPC  
+      CidrBlock: 10.0.3.0/24  
+      MapPublicIpOnLaunch: true  
+      AvailabilityZone: ap-northeast-1c  
+      Tags:  
+      - Key: Name  
+        Value: PublicSubnet1c  
+  
+  PrivateSubnet1c:  
+    Type: AWS::EC2::Subnet  
+    Properties:  
+      VpcId: !Ref SampleVPC  
+      CidrBlock: 10.0.2.0/24  
+      AvailabilityZone: ap-northeast-1c  
+      Tags:  
+      - Key: Name  
+        Value: PrivateSubnet1c  
+  
+  InternetGateway:  
+    Type: AWS::EC2::InternetGateway  
+    Properties:  
+      Tags:  
+        - Key: Name  
+          Value: InternetGateway  
+  
+  ##### #IGとVPC設定  
+  InternetGatewayAttachment:  
+    Type: AWS::EC2::VPCGatewayAttachment  
+    Properties:  
+      InternetGatewayId: !Ref InternetGateway  
+      VpcId: !Ref SampleVPC  
+  
+  PublicRouteTable:  
+    Type: AWS::EC2::RouteTable  
+    Properties:  
+      VpcId: !Ref SampleVPC  
+      Tags:  
+        - Key: Name  
+          Value: PublicRouteTable  
+  
+  PrivateRouteTable:  
+    Type: AWS::EC2::RouteTable  
+    Properties:  
+      VpcId: !Ref SampleVPC  
+      Tags:  
+        - Key: Name  
+          Value: PrivateRouteTable  
+  
+  ##### #SubnetとRoutetable設定  
+  PublicRouteTableAssociation1a:  
+    Type: AWS::EC2::SubnetRouteTableAssociation  
+    Properties:  
+      RouteTableId: !Ref PublicRouteTable  
+      SubnetId: !Ref PublicSubnet1a  
+  
+  PublicRouteTableAssociation1c:  
+    Type: AWS::EC2::SubnetRouteTableAssociation  
+    Properties:  
+      RouteTableId: !Ref PublicRouteTable  
+      SubnetId: !Ref PublicSubnet1c  
+  
+  PrivateRouteTableAssociation1a:  
+    Type: AWS::EC2::SubnetRouteTableAssociation  
+    Properties:  
+      RouteTableId: !Ref PrivateRouteTable  
+      SubnetId: !Ref PrivateSubnet1a  
+  
+  PrivateRouteTableAssociation1c:  
+    Type: AWS::EC2::SubnetRouteTableAssociation  
+    Properties:  
+      RouteTableId: !Ref PrivateRouteTable  
+      SubnetId: !Ref PrivateSubnet1c  
+  
+  ##### #Routeの指定  
+  PublicRoute:  
+    Type: AWS::EC2::Route  
+    Properties:  
+      DestinationCidrBlock: 0.0.0.0/0  
+      RouteTableId: !Ref PublicRouteTable  
+      GatewayId: !Ref InternetGateway  
+  
+  VPCEndpoint:  
+    Type: AWS::EC2::VPCEndpoint  
+    Properties:  
+      RouteTableIds:  
+        - !Ref PrivateRouteTable  
+      ServiceName: com.amazonaws.ap-northeast-1.s3  
+      VpcEndpointType: Gateway  
+      VpcId: !Ref SampleVPC  
+  
+Outputs:  
+  SampleVPC:  
+    Value: !Ref SampleVPC  
+    Export:  
+      Name: SampleVPCId-NetworkLayer  
+  
+  PublicSubnet1a:  
+    Value: !Ref PublicSubnet1a  
+    Export:  
+      Name: PublicSubnet1aId-NetworkLayer  
+  
+  PublicSubnet1c:  
+    Value: !Ref PublicSubnet1c  
+    Export:  
+      Name: PublicSubnet1cId-NetworkLayer  
+  
+  PrivateSubnet1a:  
+    Value: !Ref PrivateSubnet1a  
+    Export:  
+      Name: PrivateSubnet1aId-NetworkLayer  
+  
+  PrivateSubnet1c:  
+    Value: !Ref PrivateSubnet1c  
+    Export:  
+      Name: PrivateSubnet1cId-NetworkLayer  
+
+　　
+-------------------------  
+#### ★ネットワーク環境構築前
 ![NW_BF1](/lecture10/image/NW_BF_20241106_000000.JPG)
 ![NW_BF2](/lecture10/image/NW_BF_20241106_000001.JPG)
 ![NW_BF3](/lecture10/image/NW_BF_20241106_000002.JPG)
@@ -26,8 +186,12 @@
 ![NW_BF8](/lecture10/image/NW_BF_20241106_000007.JPG)
 ![NW_BF9](/lecture10/image/NW_BF_20241106_000008.JPG)
 ![NW_BF10](/lecture10/image/NW_BF_20241106_000009.JPG)
+　　
 -------------------------  
-#### ネットワーク環境構築後
+  
+#### ★ネットワーク環境構築後
+##### ネットワーク環境が作成されていることを確認
+  
 ![NW_AF1](/lecture10/image/NW_AF_20241106_000000.JPG)
 ![NW_AF2](/lecture10/image/NW_AF_20241106_000001.JPG)
 ![NW_AF3](/lecture10/image/NW_AF_20241106_000002.JPG)
@@ -60,12 +224,90 @@
 ![NW_AF30](/lecture10/image/NW_AF_20241106_000029.JPG)
 ![NW_AF31](/lecture10/image/NW_AF_20241106_000030.JPG)
 ![NW_AF32](/lecture10/image/NW_AF_20241106_000031.JPG)
+　　
 -------------------------  
+  
 ### ②セキュリティグループ作成
-#### YAMLファイル
-![lecture10-create_SG](/lecture10/lecture10-create_SG.yml)
+#### YAMLファイル  ( lecture10-create_SG.yml )
+  
+AWSTemplateFormatVersion: 2010-09-09  
+Description: Security_Layer Template  
+  
+Parameters:  
+  MyCidrIp:  
+    NoEcho: true  
+    Type: String  
+    Description: Enter the CIDR IP for the security group ingress rule  
+  
+Resources:  
+  SGEC2:  
+    Type: AWS::EC2::SecurityGroup  
+    Properties:  
+      GroupDescription: SecurityGroupEC2  
+      GroupName: SGEC2  
+      SecurityGroupIngress:  
+        - IpProtocol: tcp  
+          FromPort: 80  
+          ToPort: 80  
+          SourceSecurityGroupId: !Ref SGALB  
+        - IpProtocol: tcp  
+          FromPort: 22  
+          ToPort: 22  
+          CidrIp: 0.0.0.0/0  
+      Tags:  
+        - Key: Name  
+          Value: SecurityGroupEC2  
+      VpcId: !ImportValue SampleVPCId-NetworkLayer  
+  
+  SGRDS:  
+    Type: AWS::EC2::SecurityGroup  
+    Properties:  
+      GroupDescription: SecurityGroupRDS  
+      GroupName: SGRDS  
+      SecurityGroupIngress:  
+        - IpProtocol: tcp  
+          FromPort: 3306  
+          ToPort: 3306  
+          SourceSecurityGroupId: !Ref SGEC2  
+      Tags:  
+        - Key: Name  
+          Value: SecurityGroupRDS  
+      VpcId: !ImportValue SampleVPCId-NetworkLayer  
+  
+  SGALB:  
+    Type: AWS::EC2::SecurityGroup  
+    Properties:  
+      GroupDescription: SecurityGroupALB  
+      GroupName: SGALB  
+      SecurityGroupIngress:  
+        - IpProtocol: tcp  
+          FromPort: 80  
+          ToPort: 80  
+          CidrIp: 0.0.0.0/0  
+      Tags:  
+        - Key: Name  
+          Value: SGALB  
+      VpcId: !ImportValue SampleVPCId-NetworkLayer  
+  
+Outputs:  
+  SGEC2:  
+    Value: !Ref SGEC2  
+    Export:  
+      Name: SGEC2Id-SecurityLayer  
+  
+  SGRDS:  
+    Value: !Ref SGRDS  
+    Export:  
+      Name: SGRDSId-SecurityLayer  
+  
+  SGALB:  
+    Value: !Ref SGALB  
+    Export:  
+      Name: SGALBId-SecurityLayer  
+      
+　　
 -------------------------  
-#### セキュリティグループ作成前
+#### ★セキュリティグループ作成前
 ![SG_BF1](/lecture10/image/SG_BF_20241106_000000.JPG)
 ![SG_BF2](/lecture10/image/SG_BF_20241106_000001.JPG)
 ![SG_BF3](/lecture10/image/SG_BF_20241106_000002.JPG)
@@ -78,8 +320,12 @@
 ![SG_BF10](/lecture10/image/SG_BF_20241106_000009.JPG)
 ![SG_BF11](/lecture10/image/SG_BF_20241106_000010.JPG)
 ![SG_BF12](/lecture10/image/SG_BF_20241106_000011.JPG)
--------------------------  
-#### セキュリティグループ作成後
+　　
+-------------------------
+  
+#### ★セキュリティグループ作成後
+##### セキュリティグループ作成されていることを確認
+  
 ![SG_AF1](/lecture10/image/SG_AF_20241106_000000.JPG)
 ![SG_AF2](/lecture10/image/SG_AF_20241106_000001.JPG)
 ![SG_AF3](/lecture10/image/SG_AF_20241106_000002.JPG)
@@ -93,12 +339,231 @@
 ![SG_AF11](/lecture10/image/SG_AF_20241106_000010.JPG)
 ![SG_AF12](/lecture10/image/SG_AF_20241106_000011.JPG)
 ![SG_AF13](/lecture10/image/SG_AF_20241106_000012.JPG)
+　　
 -------------------------  
 ### ③EC2/S3構築
-#### YAMLファイル
-![lecture10-create_EC2-S3](/lecture10/lecture10-create_EC2-S3.yml)
+#### YAMLファイル  ( lecture10-create_EC2-S3.yml )
+
+AWSTemplateFormatVersion: 2010-09-09  
+Description: Application_Layer Template  
+  
+Parameters:  
+  InstanceType:  
+    Type: String  
+    Default: t3.micro  
+    AllowedValues:  
+      - t2.micro  
+      - t3.micro  
+      - m1.small  
+      - m1.large  
+  
+  DBInstanceIdentifier:  
+    Type: String  
+    Default: db-instance  
+  
+  DBInstanceType:  
+    Type: String  
+    Default: db.t3.micro  
+    AllowedValues:  
+      - db.t3.micro  
+      - db.t2.small  
+      - db.t2.medium  
+  
+  DBSubnetGroupDescription:  
+    Type: String  
+    Default: RDS subnet group  
+  
+  KeyPairName:  
+    Description: Name of an existing EC2 KeyPair to enable SSH access  
+    Type: String  
+    Default: lecture10  
+  
+  DBPassword:  
+    NoEcho: true  
+    Type: String  
+    MinLength: 8  
+    MaxLength: 41  
+  
+Resources:  
+  KMSKey:  
+    Type: AWS::KMS::Key  
+    Properties:  
+      Description: "KMS key for RDS encryption"  
+      KeyPolicy:  
+        Version: 2012-10-17  
+        Statement:  
+          - Sid: Allow administration of the key  
+            Effect: Allow  
+            Principal:  
+              AWS: !Sub arn:aws:iam::${AWS::AccountId}:root  
+            Action:  
+              - kms:*  
+            Resource: "*"  
+  
+  KMSAlias:  
+    Type: AWS::KMS::Alias  
+    Properties:  
+      AliasName: alias/my-rds-key  
+      TargetKeyId: !Ref KMSKey  
+  
+  EC21a:  
+    Type: AWS::EC2::Instance  
+    Properties:  
+      NetworkInterfaces:  
+        - SubnetId: !ImportValue PublicSubnet1aId-NetworkLayer  
+          GroupSet:  
+            - !ImportValue SGEC2Id-SecurityLayer  
+          DeviceIndex: 0  
+      InstanceType: !Ref InstanceType  
+      ImageId: ami-0af1df87db7b650f4  
+      IamInstanceProfile:  
+        !Ref S3AccessInstanceProfile  
+      KeyName: !Ref KeyPairName  
+      Tags:  
+        - Key: Name  
+          Value: EC21a  
+  
+  RTRDS:  
+    Type: AWS::RDS::DBInstance  
+    Properties:  
+      AllocatedStorage : 20  
+      DBInstanceClass: !Ref DBInstanceType  
+      Port: 3306  
+      StorageType: gp2  
+      BackupRetentionPeriod: 1  
+      MasterUsername: admin  
+      MasterUserPassword: !Ref DBPassword  
+      DBInstanceIdentifier: !Ref DBInstanceIdentifier  
+      DBName: RTRDS  
+      AvailabilityZone: ap-northeast-1a  
+      Engine: mysql  
+      EngineVersion: 8.0.35  
+      DBSubnetGroupName: !Ref RTRDSSubnetgroup  
+      MultiAZ: false  
+      VPCSecurityGroups:  
+        - !ImportValue SGRDSId-SecurityLayer  
+      StorageEncrypted: true  
+      KmsKeyId: !Ref KMSKey  
+      DeleteAutomatedBackups: true  
+  
+  RTRDSSubnetgroup:  
+    Type: AWS::RDS::DBSubnetGroup  
+    Properties:  
+      DBSubnetGroupDescription: !Ref DBSubnetGroupDescription  
+      DBSubnetGroupName: RTRDSSubnetgroup  
+      SubnetIds:  
+        - !ImportValue PrivateSubnet1aId-NetworkLayer  
+        - !ImportValue PrivateSubnet1cId-NetworkLayer  
+  
+  RTALB:  
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer  
+    Properties:  
+      IpAddressType: ipv4  
+      Name: RTALB  
+      Scheme: internet-facing  
+      SecurityGroups:  
+        - !ImportValue SGALBId-SecurityLayer  
+      Subnets:  
+        - !ImportValue PublicSubnet1aId-NetworkLayer  
+        - !ImportValue PublicSubnet1cId-NetworkLayer  
+      Tags:  
+        - Key: Name  
+          Value: RTALB  
+  
+  ##### # ALBのターゲットグループの指定  
+  ALBTargetGroup:  
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup  
+    Properties:  
+      Name: ALBTargetGroup  
+      Port: 80  
+      Protocol: HTTP  
+      Targets:  
+        - Id:  
+            Ref: EC21a  
+          Port: 80  
+      VpcId: !ImportValue SampleVPCId-NetworkLayer  
+      HealthCheckEnabled: true  
+      HealthCheckProtocol: HTTP  
+      HealthCheckPath: /  
+      HealthCheckPort: traffic-port  
+      HealthyThresholdCount: 5  
+      UnhealthyThresholdCount: 2  
+      HealthCheckTimeoutSeconds: 5  
+      HealthCheckIntervalSeconds: 30  
+      Matcher:  
+        HttpCode: 200  
+      Tags:  
+        - Key: Name  
+          Value: Target  
+  
+  ##### # ALBのリスナーの指定  
+  ALBListener:  
+    Type: AWS::ElasticLoadBalancingV2::Listener  
+    Properties:  
+      DefaultActions:  
+        - Type: forward  
+          TargetGroupArn:  
+            !Ref ALBTargetGroup  
+      LoadBalancerArn:  
+        !Ref RTALB  
+      Port: 80  
+      Protocol: HTTP  
+  
+  ##### # S3バケットの指定  
+  S3Bucket:  
+    Type: AWS::S3::Bucket  
+    Properties:  
+      BucketName: lecture10-s3-202410  
+      AccessControl: Private  
+      BucketEncryption:  
+        ServerSideEncryptionConfiguration:  
+          - ServerSideEncryptionByDefault:  
+              SSEAlgorithm: AES256  
+            BucketKeyEnabled: true  
+      PublicAccessBlockConfiguration:  
+        BlockPublicAcls: True  
+        BlockPublicPolicy: True  
+        IgnorePublicAcls: True  
+        RestrictPublicBuckets: True  
+      VersioningConfiguration:  
+        Status: Suspended  
+  
+  ##### #IAMロールの指定  
+  S3AccessRole:  
+    Type: AWS::IAM::Role  
+    Properties:  
+      AssumeRolePolicyDocument:  
+        Version: 2012-10-17  
+        Statement:  
+          - Effect: Allow  
+            Principal:  
+              Service:  
+                - ec2.amazonaws.com  
+            Action:  
+              - sts:AssumeRole  
+      Policies:  
+        - PolicyName: EC2-S3AccessPolicy  
+          PolicyDocument:  
+            Version: 2012-10-17  
+            Statement:  
+              - Effect: Allow  
+                Action:  
+                  - s3:*Object  
+                Resource:   
+                  - "arn:aws:s3:::*"  
+                  - "arn:aws:s3:::*/*"  
+  
+  ##### #インスタンスプロファイルの指定  
+  S3AccessInstanceProfile:  
+    Type: AWS::IAM::InstanceProfile  
+    Properties:  
+      Path: /  
+      Roles:  
+      - !Ref S3AccessRole  
+      
 -------------------------  
-#### EC2/S3構築前
+#### ★EC2/S3構築前
+  
 ![EC2-S3_BF1](/lecture10/image/EC2-S3_BF_20241106_000000.JPG)
 ![EC2-S3_BF2](/lecture10/image/EC2-S3_BF_20241106_000001.JPG)
 ![EC2-S3_BF3](/lecture10/image/EC2-S3_BF_20241106_000002.JPG)
@@ -110,8 +575,12 @@
 ![EC2-S3_BF9](/lecture10/image/EC2-S3_BF_20241106_000008.JPG)
 ![EC2-S3_BF10](/lecture10/image/EC2-S3_BF_20241106_000009.JPG)
 ![EC2-S3_BF11](/lecture10/image/EC2-S3_BF_20241106_000010.JPG)
+　　
 -------------------------  
-#### EC2/S3構築後
+  
+#### ★EC2/S3構築後
+##### EC2及びS3が構築されていることを確認
+  
 ![EC2-S3_AF1](/lecture10/image/EC2-S3_AF_20241106_000000.JPG)
 ![EC2-S3_AF2](/lecture10/image/EC2-S3_AF_20241106_000001.JPG)
 ![EC2-S3_AF3](/lecture10/image/EC2-S3_AF_20241106_000002.JPG)
@@ -127,12 +596,15 @@
 ![EC2-S3_AF13](/lecture10/image/EC2-S3_AF_20241106_000012.JPG)
 ![EC2-S3_AF14](/lecture10/image/EC2-S3_AF_20241106_000013.JPG)
 ![EC2-S3_AF15](/lecture10/image/EC2-S3_AF_20241106_000014.JPG)
+　　
 -------------------------  
-#### 環境設定
+#### ★環境設定
+  
 ![CMD1](/lecture10/image/CMD_20241106_000000.JPG)
 ![CMD2](/lecture10/image/CMD_20241106_000001.JPG)
   
-##### nginx起動
+##### ★nginx起動
+  
  [root@ip-10-0-0-56 conf.d]# systemctl start nginx  
  [root@ip-10-0-0-56 conf.d]# systemctl status nginx  
  ● nginx.service - The nginx HTTP and reverse proxy server  
@@ -154,7 +626,9 @@
  Hint: Some lines were ellipsized, use -l to show in full.  
  [root@ip-10-0-0-56 conf.d]# cd  
     
-##### MYSQLへログインできることを確認
+#### ★MYSQL
+##### ログインできることを確認
+  
  [root@ip-10-0-0-56 ~]# mysql -u admin -p -h db-instance.cjcyo6gekjgm.ap-northeast-1.rds.amazonaws.com  
  Enter password:  
  Welcome to the MariaDB monitor.  Commands end with ; or \g.  
@@ -172,14 +646,18 @@
  logout  
  [ec2-user@ip-10-0-0-56 ~]$  
      
-#### S3へファイルアップロードできることを確認
- [ec2-user@ip-10-0-0-56 ~]$ aws s3 cp large_test_file.jpg s3://lecture10-s3-202410  
+#### ★S3
+##### ファイルアップロードできることを確認
+  
+[ec2-user@ip-10-0-0-56 ~]$ aws s3 cp large_test_file.jpg s3://lecture10-s3-202410  
  upload: ./large_test_file.jpg to s3://lecture10-s3-202410/large_test_file.jpg  
- [ec2-user@ip-10-0-0-56 ~]$  
+[ec2-user@ip-10-0-0-56 ~]$  
   
 ![CMD3](/lecture10/image/CMD_20241114_000000.JPG)
   
-#### ALB及びターゲットグループの状態を確認
+#### ★ALB及びターゲットグループの状態
+##### すべて正常であることを確認
+  
 ![CMD4](/lecture10/image/CMD_20241106_000002.JPG)
 
 
