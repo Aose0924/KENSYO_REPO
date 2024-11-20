@@ -1,0 +1,216 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Application_Layer Template
+
+Parameters:
+  InstanceType:
+    Type: String
+    Default: t3.micro
+    AllowedValues:
+      - t2.micro
+      - t3.micro
+      - m1.small
+      - m1.large
+
+  DBInstanceIdentifier:
+    Type: String
+    Default: db-instance
+
+  DBInstanceType:
+    Type: String
+    Default: db.t3.micro
+    AllowedValues:
+      - db.t3.micro
+      - db.t2.small
+      - db.t2.medium
+
+  DBSubnetGroupDescription:
+    Type: String
+    Default: RDS subnet group
+
+  KeyPairName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access
+    Type: String
+    Default: lecture10
+
+  DBPassword:
+    NoEcho: true
+    Type: String
+    MinLength: 8
+    MaxLength: 41
+
+Resources:
+  KMSKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: "KMS key for RDS encryption"
+      KeyPolicy:
+        Version: 2012-10-17
+        Statement:
+          - Sid: Allow administration of the key
+            Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
+            Action:
+              - kms:*
+            Resource: "*"
+
+  KMSAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: alias/my-rds-key
+      TargetKeyId: !Ref KMSKey
+
+  EC21a:
+    Type: AWS::EC2::Instance
+    Properties:
+      NetworkInterfaces:
+        - SubnetId: !ImportValue PublicSubnet1aId-NetworkLayer
+          GroupSet:
+            - !ImportValue SGEC2Id-SecurityLayer
+          DeviceIndex: 0
+      InstanceType: !Ref InstanceType
+      ImageId: ami-0af1df87db7b650f4
+      IamInstanceProfile:
+        !Ref S3AccessInstanceProfile
+      KeyName: !Ref KeyPairName
+      Tags:
+        - Key: Name
+          Value: EC21a
+
+  RTRDS:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage : 20
+      DBInstanceClass: !Ref DBInstanceType
+      Port: 3306
+      StorageType: gp2
+      BackupRetentionPeriod: 1
+      MasterUsername: admin
+      MasterUserPassword: !Ref DBPassword
+      DBInstanceIdentifier: !Ref DBInstanceIdentifier
+      DBName: RTRDS
+      AvailabilityZone: ap-northeast-1a
+      Engine: mysql
+      EngineVersion: 8.0.35
+      DBSubnetGroupName: !Ref RTRDSSubnetgroup
+      MultiAZ: false
+      VPCSecurityGroups:
+        - !ImportValue SGRDSId-SecurityLayer
+      StorageEncrypted: true
+      KmsKeyId: !Ref KMSKey
+      DeleteAutomatedBackups: true
+
+  RTRDSSubnetgroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: !Ref DBSubnetGroupDescription
+      DBSubnetGroupName: RTRDSSubnetgroup
+      SubnetIds:
+        - !ImportValue PrivateSubnet1aId-NetworkLayer
+        - !ImportValue PrivateSubnet1cId-NetworkLayer
+
+  RTALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      IpAddressType: ipv4
+      Name: RTALB
+      Scheme: internet-facing
+      SecurityGroups:
+        - !ImportValue SGALBId-SecurityLayer
+      Subnets:
+        - !ImportValue PublicSubnet1aId-NetworkLayer
+        - !ImportValue PublicSubnet1cId-NetworkLayer
+      Tags:
+        - Key: Name
+          Value: RTALB
+
+  # ALBのターゲットグループの指定
+  ALBTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: ALBTargetGroup
+      Port: 80
+      Protocol: HTTP
+      Targets:
+        - Id:
+            Ref: EC21a
+          Port: 80
+      VpcId: !ImportValue SampleVPCId-NetworkLayer
+      HealthCheckEnabled: true
+      HealthCheckProtocol: HTTP
+      HealthCheckPath: /
+      HealthCheckPort: traffic-port
+      HealthyThresholdCount: 5
+      UnhealthyThresholdCount: 2
+      HealthCheckTimeoutSeconds: 5
+      HealthCheckIntervalSeconds: 30
+      Matcher:
+        HttpCode: 200
+      Tags:
+        - Key: Name
+          Value: Target
+
+  # ALBのリスナーの指定
+  ALBListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn:
+            !Ref ALBTargetGroup
+      LoadBalancerArn:
+        !Ref RTALB
+      Port: 80
+      Protocol: HTTP
+
+  # S3バケットの指定
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: lecture10-s3-202410
+      AccessControl: Private
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+            BucketKeyEnabled: true
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+      VersioningConfiguration:
+        Status: Suspended
+
+  # IAMロールの指定
+  S3AccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: EC2-S3AccessPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*Object
+                Resource: 
+                  - "arn:aws:s3:::*"
+                  - "arn:aws:s3:::*/*"
+
+  # インスタンスプロファイルの指定
+  S3AccessInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+      - !Ref S3AccessRole

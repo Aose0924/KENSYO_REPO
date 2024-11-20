@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Security_Layer Template
+
+Parameters:
+  MyCidrIp:
+    NoEcho: true
+    Type: String
+    Description: Enter the CIDR IP for the security group ingress rule
+
+Resources:
+  SGEC2:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SecurityGroupEC2
+      GroupName: SGEC2
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !Ref SGALB
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: SecurityGroupEC2
+      VpcId: !ImportValue SampleVPCId-NetworkLayer
+
+  SGRDS:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SecurityGroupRDS
+      GroupName: SGRDS
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !Ref SGEC2
+      Tags:
+        - Key: Name
+          Value: SecurityGroupRDS
+      VpcId: !ImportValue SampleVPCId-NetworkLayer
+
+  SGALB:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SecurityGroupALB
+      GroupName: SGALB
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: SecurityGroupALB
+      VpcId: !ImportValue SampleVPCId-NetworkLayer
+
+Outputs:
+  SGEC2:
+    Value: !Ref SGEC2
+    Export:
+      Name: SGEC2Id-SecurityLayer
+
+  SGRDS:
+    Value: !Ref SGRDS
+    Export:
+      Name: SGRDSId-SecurityLayer
+
+  SGALB:
+    Value: !Ref SGALB
+    Export:
+      Name: SGALBId-SecurityLayer
