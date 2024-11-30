@@ -1,6 +1,9 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Security_Layer Template
 
+settings:
+  !include lecture10/lecture10-create_NW.yml
+
 Parameters:
   MyCidrIp:
     NoEcho: true
