@@ -1,6 +1,10 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Application_Layer Template
 
+settings:
+  !include lecture10/lecture10-create_SG.yml
+  !include lecture10/lecture10-create_NW.yml
+
 Parameters:
   InstanceType:
     Type: String
