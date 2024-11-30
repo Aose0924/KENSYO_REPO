@@ -1,6 +1,10 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Network_Layer Template
 
+settings:
+  !include lecture10/lecture10-create_SG.yml
+  !include lecture10/lecture10-create_NW.yml
+
 Resources:
   SampleVPC:
     Type: AWS::EC2::VPC
