@@ -19,7 +19,7 @@ lecture10では、ネットワーク構築、セキュリティグループ作�
 
 ### ①ネットワーク環境の構築
 #### YAMLファイル
-![lecture10-create_NW](/lecture10/lecture10-create_NW.yml)
+[lecture10-create_NW](/lecture10/lecture10-create_NW.yml)
 
 #### ネットワーク環境構築前
 ![NW_BF1](/lecture10/image/NW_BF_20241106_000000.JPG)
@@ -69,7 +69,7 @@ lecture10では、ネットワーク構築、セキュリティグループ作�
 
 ### ②セキュリティグループ作成
 #### YAMLファイル
-![lecture10-create_SG](/lecture10/lecture10-create_SG.yml)
+[lecture10-create_SG](/lecture10/lecture10-create_SG.yml)
 
 #### セキュリティグループ作成前
 ![SG_BF1](/lecture10/image/SG_BF_20241106_000000.JPG)
@@ -102,7 +102,7 @@ lecture10では、ネットワーク構築、セキュリティグループ作�
 
 ### ③EC2/S3構築
 #### YAMLファイル
-![lecture10-create_EC2-S3](/lecture10/lecture10-create_EC2-S3.yml)
+[lecture10-create_EC2-S3](/lecture10/lecture10-create_EC2-S3.yml)
 
 #### EC2/S3構築前
 ![EC2-S3_BF1](/lecture10/image/EC2-S3_BF_20241106_000000.JPG)
